@@ -7,7 +7,8 @@ import moment from 'moment-timezone';
 const args = minimist(process.argv.slice(2));
 
 if(args.h) {
-	console.log("Usage: galosh.js [options] -[n|s] LATITUDE -[e|w] LONGITUDE -z TIME_ZONE \n \
+	console.log(
+	"Usage: galosh.js [options] -[n|s] LATITUDE -[e|w] LONGITUDE -z TIME_ZONE \n \
 	-h            Show this help message and exit. \n \
 	-n, -s        Latitude: N positive; S negative. \n \
 	-e, -w        Longitude: E positive; W negative. \n \
@@ -20,8 +21,8 @@ if(args.h) {
 
 const timezone = args.z ? args.z : moment.tz.guess();
 
-var latitude = args.n ? args.n : args.s;
-var longitude = args.e ? args.e : args.w;
+var latitude = args.n || args.s * -1;
+var longitude = args.e || args.w * -1;
 var day = args.d ? args.d : 1;
 var start_date = moment().format("YYYY-MM-DD"); 
 var end_date = moment().add(day,'days').format("YYYY-MM-DD");
@@ -34,6 +35,11 @@ const response = await fetch(URL);
 // Get the data from the request.
 const data = await response.json();
 
+if(args.j) {
+	console.log(data);
+	process.exit(0);
+}
+
 const days = args.d;
 
 if (days == 0) {
@@ -43,5 +49,6 @@ if (days == 0) {
 } else {
   console.log("tomorrow.")
 }
+
 
 console.log(data);
